@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Steam — Inicio de sesión (réplica)</title>
+
+  <style>
+    :root{
+      --bg:#0e1216;
+      --nav:#11171b;
+      --panel:#0f171b;
+      --muted:#9aa7b4;
+      --input-bg:#2b2f33;
+      --input-border:#3a4046;
+      --accent:#3fb3ff;
+      --accent-2:#1788d6;
+      --card-bg: rgba(14,20,24,0.85);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: #dce6ee;
+    }
+
+    .bg-hero{
+      position:fixed;
+      inset:0;
+      background-image: url("https://store.cloudflare.steamstatic.com/public/shared/images/joinsteam/background.jpg");
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.35);
+      z-index:0;
+    }
+    .bg-overlay{
+      position:fixed;
+      inset:0;
+      background: linear-gradient(180deg, rgba(10,14,18,0.45), rgba(7,10,13,0.65));
+      z-index:1;
+    }
+
+    header.nav{
+      position:relative;
+      z-index:3;
+      height:68px;
+      background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display:flex;
+      align-items:center;
+      padding: 0 22px;
+      gap:18px;
+    }
+    .nav-left{ display:flex; align-items:center; gap:18px; }
+    .logo img{ height:28px; }
+    .nav-links{ color:#9fb2c8; font-size:14px; display:flex; gap:18px; }
+    .nav-links a{ color:inherit; text-decoration:none; }
+
+    .search{ margin-left:auto; display:flex; gap:10px; }
+    .search input{
+      width:360px;
+      padding:8px 10px;
+      border-radius:3px;
+      border:1px solid rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.03);
+      color: #cfe8ff;
+    }
+    .install-btn{
+      background:#1e8b2f;
+      color:white;
+      padding:7px 12px;
+      border-radius:4px;
+      font-weight:600;
+      text-decoration:none;
+    }
+
+    main{
+      position:relative;
+      z-index:3;
+      min-height: calc(100vh - 68px);
+      display:flex;
+      justify-content:center;
+      padding-top:48px;
+    }
+
+    .login-panel{
+      width:920px;
+      background: var(--card-bg);
+      border-radius:6px;
+      display:flex;
+      gap:28px;
+      padding:30px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .left{ flex:1; }
+    .title{ font-size:34px; font-weight:700; margin:6px 0 22px; }
+
+    label.small{ font-size:12px; color:var(--muted); display:block; margin-bottom:6px; }
+    .input{
+      width:100%;
+      padding:12px;
+      margin-bottom:14px;
+      background:var(--input-bg);
+      border:1px solid var(--input-border);
+      border-radius:4px;
+      color:#e9f6ff;
+    }
+
+    .checkbox-row{ display:flex; gap:8px; margin-bottom:18px; }
+
+    .btn-blue{
+      width:100%;
+      padding:12px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      border-radius:4px;
+      border:0;
+      font-weight:700;
+      color:white;
+      cursor:pointer;
+    }
+
+    .help{ text-align:center; margin-top:10px; }
+    .help a{ color:#8bd7ff; text-decoration:none; }
+
+    .panel-footer{
+      margin-top:16px;
+      font-size:13px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .right{
+      width:300px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+
+    .qr-card{
+      width:100%;
+      padding:14px;
+      background: rgba(255,255,255,0.02);
+      border-radius:6px;
+      text-align:center;
+    }
+    .qr-card img{
+      width:170px;
+      height:170px;
+      background:white;
+      padding:6px;
+      border-radius:4px;
+    }
+
+    /* FOOTER STEAM */
+    .steam-footer{
+      margin-top:50px;
+      background:#171a21;
+      color:#8f98a0;
+      padding:40px 0 50px;
+      font-size:13px;
+      z-index:3;
+      position:relative;
+    }
+
+    .steam-footer .first-section{
+      text-align:center;
+      margin-bottom:25px;
+    }
+    .steam-footer h3{
+      color:white;
+      margin-bottom:10px;
+      font-size:18px;
+    }
+    .steam-footer a{ color:#c6d4df; text-decoration:none; }
+
+    .create-btn{
+      background:#5c7e10;
+      padding:10px 22px;
+      border-radius:4px;
+      color:white;
+      font-weight:700;
+      border:0;
+      cursor:pointer;
+      margin-top:10px;
+    }
+
+    .footer-divider{
+      height:1px;
+      background:#2a2d33;
+      margin:20px auto;
+      width:90%;
+    }
+
+    .footer-info{
+      text-align:center;
+      max-width:900px;
+      margin:auto;
+    }
+    .valve-logo img{
+      width:110px;
+      margin-bottom:15px;
+      opacity:0.9;
+    }
+    .footer-links a{ color:#b8c6d1; text-decoration:none; }
+  </style>
+</head>
+<body>
+
+<div class="bg-hero"></div>
+<div class="bg-overlay"></div>
+
+<header class="nav">
+    <div class="nav-left">
+        <a class="logo"><img src="https://store.cloudflare.steamstatic.com/public/shared/images/header/logo_steam.svg?v=1"></a>
+
+        <nav class="nav-links">
+            <a href="#">Tienda</a>
+            <a href="#">Comunidad</a>
+            <a href="#">Acerca de</a>
+            <a href="#">Soporte</a>
+        </nav>
+    </div>
+
+    <div class="search">
+        <input type="search" placeholder="Buscar en la tienda">
+        <a class="install-btn" href="#">Instalar Steam</a>
+    </div>
+</header>
+
+<main>
+  <section class="login-panel">
+
+    <div class="left">
+      <h1 class="title">Inicio de sesión</h1>
+
+      <label class="small">INICIA SESIÓN CON TU NOMBRE DE CUENTA</label>
+      <input class="input" id="account" type="text" placeholder="Nombre de cuenta">
+
+      <label class="small">CONTRASEÑA</label>
+      <input class="input" id="password" type="password" placeholder="Contraseña">
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="remember"><label for="remember">Recordarme</label>
+      </div>
+
+      <button class="btn-blue" id="loginBtn">Iniciar sesión</button>
+
+      <div class="help"><a href="#">Ayuda, no puedo iniciar sesión</a></div>
+
+      <div class="panel-footer">
+        ¿Tu primera vez en Steam? Es gratis y muy fácil. Descubre miles de juegos.
+      </div>
+    </div>
+
+    <aside class="right">
+      <div style="font-weight:700; font-size:13px; color:var(--muted);">O BIEN CON UN CÓDIGO QR</div>
+
+      <div class="qr-card">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SteamLogin">
+        <div class="qr-caption">Usa la <strong>aplicación Steam Mobile</strong> para iniciar sesión</div>
+      </div>
+    </aside>
+
+  </section>
+</main>
+
+<footer class="steam-footer">
+
+  <div class="first-section">
+      <h3>¿Tu primera vez en Steam?</h3>
+      <p>
+          Es gratis y muy fácil. Descubre miles de juegos para jugar con millones de amigos nuevos.
+          <a href="#">Más información acerca de Steam</a>
+      </p>
+      <button class="create-btn">Crea una cuenta</button>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <div class="footer-info">
+      <div class="valve-logo">
+          <img src="https://store.cloudflare.steamstatic.com/public/shared/images/footer/logo_valve_footer.png">
+      </div>
+
+      <p>
+          © 2025 Valve Corporation. Todos los derechos reservados.<br>
+          Todas las marcas registradas pertenecen a sus respectivos dueños.<br>
+          <a href="#">Política de Privacidad</a> |
+          <a href="#">Información legal</a> |
+          <a href="#">Accesibilidad</a> |
+          <a href="#">Acuerdo de Suscriptor</a> |
+          <a href="#">Reembolsos</a> |
+          <a href="#">Cookies</a>
+      </p>
+
+      <p class="footer-links">
+          <a href="#">Acerca de Valve</a> |
+          <a href="#">Empleo</a> |
+          <a href="#">Steamworks</a> |
+          <a href="#">Distribución</a> |
+          <a href="#">Tarjetas regalo</a>
+      </p>
+  </div>
+
+</footer>
+
+<script>
+document.getElementById("loginBtn").addEventListener("click", ()=>{
+  const acc = account.value.trim();
+  const pass = password.value.trim();
+
+  if(!acc || !pass){
+    alert("Por favor ingresa tu nombre de cuenta y contraseña.");
+    return;
+  }
+
+  alert("Simulación: credenciales validadas (demo).");
+});
+</script>
+
+</body>
+</html>
